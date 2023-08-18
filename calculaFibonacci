@@ -1,0 +1,96 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  debugPrint = (String? message, {int? wrapWidth}) {};
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  static const String _title = 'Calculadora Fibonacci em Flutter';
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: _title,
+      theme: ThemeData(
+        primarySwatch: Colors.green,
+      ),
+      debugShowCheckedModeBanner: false,
+      home: const MyHomePage(),
+    );
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({Key? key}) : super(key: key);
+
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  final controller = TextEditingController();
+
+  final List<int> _fibonacciSeries = [];
+
+  void _calculateFibonacciSeries(int iteracoes) {
+    _fibonacciSeries.clear();
+
+    for (int i = 0; i < iteracoes; i++) {
+      _fibonacciSeries.add(_fibonacci(i));
+    }
+
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Calculadora Fibonacci',
+          style: TextStyle(color: Colors.black, fontSize: 30),
+        ),
+        centerTitle: true,
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            TextField(
+              controller: controller,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(labelText: 'Número de Iterações:'),
+            ),
+            const SizedBox(height: 50),
+            ElevatedButton(
+              onPressed: () {
+                final inputValue = int.tryParse(controller.text);
+                if (inputValue != null && inputValue > 0) {
+                  _calculateFibonacciSeries(inputValue);
+                }
+              },
+              child: const Text('Calcular Fibonacci'),
+            ),
+            ListView.builder(
+              shrinkWrap: true,
+              itemCount: _fibonacciSeries.length,
+              itemBuilder: (BuildContext context, int index) {
+                return Text('Fibonacci($index) = ${_fibonacciSeries[index]}');
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  int _fibonacci(int n) {
+    if (n == 0) return 0;
+    if (n == 1) return 1;
+
+    return _fibonacci(n - 1) + _fibonacci(n - 2);
+  }
+}
